@@ -1,0 +1,268 @@
+# EvalSync Test Configuration
+# Comprehensive testing configuration for LLM service evaluation
+
+# Test execution settings
+execution:
+  parallel: true
+  max_workers: 4
+  timeout: 300  # seconds
+  retry_attempts: 3
+  retry_delay: 1  # seconds
+
+# Target services to test
+targets:
+  # Example SignalCLI service
+  signalcli:
+    base_url: "http://localhost:8000"
+    timeout: 30
+    endpoints:
+      - "/query"
+      - "/health"
+      - "/metrics"
+    auth:
+      type: "bearer"
+      token: "${SIGNALCLI_API_KEY}"
+    
+  # Example CampusGPT service  
+  campusgpt:
+    base_url: "http://localhost:8001"
+    timeout: 45
+    endpoints:
+      - "/api/v1/chat"
+      - "/api/v1/generate"
+      - "/health"
+    auth:
+      type: "api_key"
+      header: "X-API-Key"
+      key: "${CAMPUSGPT_API_KEY}"
+    
+  # Example RouterRAG service
+  routerrag:
+    base_url: "http://localhost:8002"
+    timeout: 60
+    endpoints:
+      - "/query"
+      - "/experts"
+      - "/retrieve"
+    auth:
+      type: "none"
+
+# Test categories configuration
+test_categories:
+  health:
+    enabled: true
+    priority: critical
+    description: "Basic service health and availability checks"
+    
+  integration:
+    enabled: true
+    priority: high
+    description: "Integration tests for API functionality"
+    timeout: 120
+    
+  fuzzing:
+    enabled: true
+    priority: medium
+    description: "Input fuzzing and security tests"
+    iterations: 100
+    
+  performance:
+    enabled: true
+    priority: low
+    description: "Performance and load testing"
+    
+  schema:
+    enabled: true
+    priority: high
+    description: "API schema validation and compliance"
+    strict_validation: false
+
+# Fuzzing configuration
+fuzzing:
+  # Input types to test
+  input_types:
+    - "empty_strings"
+    - "unicode_spam"
+    - "control_characters"
+    - "xss_payloads"
+    - "sql_injection"
+    - "prompt_injection"
+    - "buffer_overflow"
+    - "json_bombs"
+    
+  # Parameters to fuzz
+  parameter_fuzzing:
+    - "temperature"
+    - "max_tokens"
+    - "top_p"
+    - "top_k"
+    - "frequency_penalty"
+    - "presence_penalty"
+    
+  # Fuzzing limits
+  max_iterations: 1000
+  max_input_length: 10000
+  timeout_per_test: 30
+
+# Performance test settings
+performance:
+  # Load test patterns
+  load_patterns:
+    - name: "baseline_load"
+      concurrent_users: 5
+      requests_per_second: 2
+      duration: 60
+      
+    - name: "moderate_load" 
+      concurrent_users: 20
+      requests_per_second: 10
+      duration: 120
+      
+    - name: "high_load"
+      concurrent_users: 50
+      requests_per_second: 25
+      duration: 180
+      
+    - name: "stress_test"
+      concurrent_users: 100
+      requests_per_second: 50
+      duration: 300
+
+  # Performance thresholds
+  thresholds:
+    max_response_time: 5000  # ms
+    min_success_rate: 0.95
+    max_error_rate: 0.05
+    max_memory_increase: 1073741824  # 1GB in bytes
+    
+  # Benchmark settings
+  benchmark:
+    warmup_requests: 10
+    measurement_requests: 50
+    concurrent_users: 1
+
+# Schema validation settings
+schema:
+  strict_validation: false
+  validate_examples: true
+  check_consistency: true
+  openapi_compliance: true
+
+# SLA requirements
+sla:
+  max_response_time_ms: 5000
+  min_availability: 0.99
+  max_error_rate: 0.01
+
+# Reporting configuration
+reporting:
+  formats: ["html", "json", "junit", "csv"]
+  output_dir: "reports"
+  include_traces: true
+  include_performance_charts: true
+  
+  # Report customization
+  html:
+    theme: "default"
+    include_screenshots: false
+    expand_failures: true
+    
+  # Notification settings
+  notifications:
+    slack:
+      enabled: false
+      webhook_url: "${SLACK_WEBHOOK_URL}"
+      channel: "#testing"
+      mention_on_failure: true
+      
+    email:
+      enabled: false
+      smtp_server: "smtp.gmail.com"
+      smtp_port: 587
+      username: "${EMAIL_USERNAME}"
+      password: "${EMAIL_PASSWORD}"
+      recipients: ["team@company.com"]
+      
+    github:
+      enabled: false
+      token: "${GITHUB_TOKEN}"
+      repository: "owner/repo"
+      issue_on_failure: true
+
+# CI/CD Integration settings
+ci_cd:
+  fail_on_error: true
+  fail_fast: false
+  
+  # Quality gates
+  quality_gates:
+    min_test_coverage: 0.80
+    max_failure_rate: 0.05
+    max_avg_response_time: 2000  # ms
+    min_pass_rate: 0.95
+    
+  # Regression detection
+  regression_detection:
+    enabled: true
+    baseline_file: "reports/baseline_results.json"
+    tolerance_percent: 20  # % increase allowed
+    
+  # Test selection
+  test_selection:
+    run_all_on_main: true
+    quick_tests_on_pr: ["health", "integration"]
+    full_tests_schedule: "nightly"
+
+# Environment-specific overrides
+environments:
+  development:
+    execution:
+      parallel: false
+      timeout: 60
+    performance:
+      enabled: false
+    fuzzing:
+      iterations: 10
+      
+  staging:
+    targets:
+      signalcli:
+        base_url: "https://staging.signalcli.example.com"
+      campusgpt:
+        base_url: "https://staging.campusgpt.example.com"
+        
+  production:
+    test_categories:
+      fuzzing:
+        enabled: false
+      performance:
+        enabled: false
+    sla:
+      max_response_time_ms: 2000
+      min_availability: 0.999
+
+# Logging configuration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file: "logs/evalsync.log"
+  max_size: "10MB"
+  backup_count: 5
+  
+# Plugin configuration
+plugins:
+  enabled: []
+  custom_validators: []
+  custom_reporters: []
+
+# Advanced settings
+advanced:
+  parallel_suite_execution: true
+  cache_http_responses: false
+  mock_external_services: false
+  capture_network_traffic: false
+  
+  # Resource limits
+  max_memory_usage: "2GB"
+  max_cpu_usage: 80  # percent
+  max_disk_usage: "1GB"
