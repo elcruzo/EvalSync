@@ -1,0 +1,157 @@
+# EvalSync specific .gitignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+Thumbs.db
+
+# EvalSync specific
+logs/
+*.log
+test_cache/
+
+# Test reports and results
+reports/
+test-results/
+test_output/
+*.html
+*.xml
+*.json
+allure-results/
+
+# Coverage reports
+.coverage
+htmlcov/
+coverage.xml
+.pytest_cache/
+
+# Performance test results
+performance_results/
+load_test_results/
+benchmark_results/
+
+# Test data and fixtures
+test_data/generated/
+test_artifacts/
+mock_data/
+
+# Postman/Newman results
+newman/
+postman_results/
+
+# Configuration with secrets
+config/secrets.yaml
+config/test_credentials.yaml
+.env.local
+.env.production
+.env.test
+
+# Docker test volumes
+docker/test_data/
+volumes/
+
+# Fuzzing results
+fuzzing_results/
+crash_logs/
+fuzz_artifacts/
+
+# Screenshots and videos (from UI tests)
+screenshots/
+videos/
+*.png
+*.jpg
+*.mp4
+
+# Load testing artifacts
+locust_reports/
+jmeter_results/
+
+# Database test files
+test.db
+*.sqlite
+test_*.sql
+
+# Temporary test files
+tmp/
+temp/
+*.tmp
+test_temp/
+
+# Backup files
+*.bak
+*.backup
+*.orig
+
+# Large test datasets
+large_test_data/
+*.tar.gz
+*.zip
+
+# Hypothesis database
+.hypothesis/
+
+# Tox environments
+.tox/
+.nox/
+
+# Documentation build
+docs/_build/
+
+# Node modules (for Newman)
+node_modules/
+package-lock.json
+
+# Jupyter notebooks
+.ipynb_checkpoints/
+
+# Test isolation
+isolated_tests/
+sandbox/
+
+# CI/CD artifacts
+.github/workflows/*.log
+ci_artifacts/
+
+# Memory profiling
+*.prof
+memory_profiles/
