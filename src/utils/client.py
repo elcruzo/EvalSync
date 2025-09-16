@@ -39,16 +39,20 @@ class APIClient:
         if auth:
             self._setup_auth(auth)
         
-        # Initialize httpx client
+        # Initialize httpx client with improved timeout handling (Sept 2025 fix)
+        # Fixed: Previous version had issues with long-running tests
         self.client = httpx.Client(
-            timeout=timeout,
-            headers=self.default_headers
+            timeout=httpx.Timeout(timeout, connect=5.0),  # Added connect timeout
+            headers=self.default_headers,
+            limits=httpx.Limits(max_connections=100, max_keepalive_connections=20)
         )
         
         # Async client for concurrent requests
+        # Fixed in Sept 2025: Added proper async timeout configuration
         self.async_client = httpx.AsyncClient(
-            timeout=timeout,
-            headers=self.default_headers
+            timeout=httpx.Timeout(timeout, connect=5.0),
+            headers=self.default_headers,
+            limits=httpx.Limits(max_connections=100, max_keepalive_connections=20)
         )
         
         # Request tracking
