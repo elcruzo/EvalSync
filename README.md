@@ -48,7 +48,7 @@ EvalSync demonstrates maturity in shipping safe, tested, and robust AI systems t
 
 ```bash
 # Clone the repository
-git clone <repository-url>
+git clone https://github.com/elcruzo/EvalSync
 cd EvalSync
 
 # Install dependencies
